@@ -16,7 +16,8 @@ func New(pathToTextFile string) (*TextReader, error) {
 
 	reader := TextReader{}
 
-	file, err := reader.OpenFile(pathToTextFile)
+	file, err := openFile(pathToTextFile)
+	reader.OpenedFile = file
 
 	if err != nil {
 		return nil, err
@@ -30,7 +31,7 @@ func New(pathToTextFile string) (*TextReader, error) {
 	return &reader, nil
 }
 
-func (t *TextReader) OpenFile(path string) (*os.File, error) {
+func openFile(path string) (*os.File, error) {
 
 	if path == "" {
 		return nil, errors.New("file path must be longer than zero characters")
@@ -41,25 +42,25 @@ func (t *TextReader) OpenFile(path string) (*os.File, error) {
 		return nil, err
 	}
 
-	t.OpenedFile = fileHandle
-
 	return fileHandle, nil
 }
 
-func (t *TextReader) ReadLine() (string, error) {
+func (t *TextReader) ReadLine() (*string, error) {
 
 	if !t.Scanner.Scan() {
 		err := t.Scanner.Err()
 		if err == nil {
 			log.Println("Scan completed and reached EOF")
 			t.OpenedFile.Close()
+			return nil, nil
 		} else {
 			log.Println("Other error")
 			t.OpenedFile.Close()
-			return "", err
+			return nil, err
 		}
 	}
 
-	return t.Scanner.Text(), nil
+	text := t.Scanner.Text()
+	return &text, nil
 
 }
