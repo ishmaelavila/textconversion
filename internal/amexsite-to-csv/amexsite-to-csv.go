@@ -9,11 +9,12 @@ import (
 )
 
 var (
-	linesPerTransaction      int   = 3
-	IncompleteTransactionErr error = errors.New("missing a line, unable to complete transaction")
-	lineOfDate               int   = 0
-	lineOfDescription        int   = 1
-	lineOfAmount             int   = 2
+	linesPerTransaction      int    = 3
+	IncompleteTransactionErr error  = errors.New("missing a line, unable to complete transaction")
+	lineOfDate               int    = 0
+	lineOfDescription        int    = 1
+	lineOfAmount             int    = 2
+	amexDateLayout           string = "Jan 2"
 )
 
 var specialLines = map[string]string{
@@ -82,8 +83,7 @@ func (a *Coverter) convertLinesToTransaction(lines []string) string {
 }
 
 func isDate(line string) bool {
-	layout := "Jan 2"
-	_, err := time.Parse(layout, line)
+	_, err := time.Parse(amexDateLayout, line)
 
 	if err != nil {
 		return false
