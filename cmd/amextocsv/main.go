@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"ishmaelavila/amextocsv/internal/textreader"
+	amexsitetocsv "ishmaelavila/amextocsv/internal/amexsite-to-csv"
 	"log"
 	"os"
 )
@@ -11,33 +11,39 @@ func main() {
 
 	args := os.Args
 	argsExpected := 2
-	log.Printf("args: %s", args)
 
-	if len(args) > argsExpected || len(args) <= 1 {
-		log.Printf("Invalid amount of arguments, expected %d, got %d, ignoring extra arguments", argsExpected, len(args))
+	if len(args) > argsExpected {
+		log.Printf("Invalid number of arguments, expected %d, got %d, ignoring extra arguments", argsExpected, len(args))
+	}
+
+	if len(args) < argsExpected {
+		log.Fatalf("Invalid number of arguments, please provide a path")
 	}
 
 	path := args[1]
 
-	reader, err := textreader.New(path)
+	converter, err := amexsitetocsv.New(path)
 
 	if err != nil {
-		log.Fatalf("Error Opening File: %s", err)
-		return
+		log.Fatalf("could not initalize amex site to csv converter: %s", err)
 	}
 
-	for {
-		line, err := reader.ReadLine()
+	csvString := converter.ConvertToCsv()
 
-		if err != nil {
-			log.Fatalf("something went wrnog while reading file: %s", err)
-		}
+	fmt.Println(csvString)
 
-		if line == nil {
-			break
-		}
+	f, err := os.Create("./output.csv")
 
-		fmt.Println(*line)
+	if err != nil {
+		log.Fatalf("error opening output file: %s", err)
 	}
+
+	_, err = f.WriteString(csvString)
+
+	if err != nil {
+		log.Fatalf("error writing to output file %s", err)
+	}
+
+	os.Exit(0)
 
 }
