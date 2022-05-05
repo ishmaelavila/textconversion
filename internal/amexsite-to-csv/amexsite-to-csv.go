@@ -85,11 +85,7 @@ func (a *Coverter) convertLinesToTransaction(lines []string) string {
 func isDate(line string) bool {
 	_, err := time.Parse(amexDateLayout, line)
 
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func (a *Coverter) readLines() ([][]string, error) {
