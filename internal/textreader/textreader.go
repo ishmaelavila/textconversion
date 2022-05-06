@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+var (
+	ErrEmptyFilePath error = errors.New("file path must not have a length of less than 1")
+)
+
 type TextReader struct {
 	Scanner    bufio.Scanner
 	OpenedFile *os.File
@@ -34,8 +38,9 @@ func New(pathToTextFile string) (*TextReader, error) {
 func openFile(path string) (*os.File, error) {
 
 	if path == "" {
-		return nil, errors.New("file path must be longer than zero characters")
+		return nil, ErrEmptyFilePath
 	}
+
 	fileHandle, err := os.Open(path)
 
 	if err != nil {
