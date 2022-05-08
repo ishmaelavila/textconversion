@@ -13,7 +13,7 @@ var (
 
 type TextReader struct {
 	Scanner    bufio.Scanner
-	OpenedFile *os.File
+	OpenedFile os.File
 }
 
 func New(pathToTextFile string) (*TextReader, error) {
@@ -21,7 +21,12 @@ func New(pathToTextFile string) (*TextReader, error) {
 	reader := TextReader{}
 
 	file, err := openFile(pathToTextFile)
-	reader.OpenedFile = file
+
+	if err != nil {
+		return nil, err
+	}
+
+	reader.OpenedFile = *file
 
 	if err != nil {
 		return nil, err
