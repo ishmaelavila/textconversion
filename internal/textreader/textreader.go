@@ -11,14 +11,14 @@ var (
 	ErrEmptyFilePath error = errors.New("file path must not have a length of less than 1")
 )
 
-type TextReader struct {
+type Reader struct {
 	Scanner    bufio.Scanner
 	OpenedFile os.File
 }
 
-func New(pathToTextFile string) (*TextReader, error) {
+func New(pathToTextFile string) (*Reader, error) {
 
-	reader := TextReader{}
+	reader := Reader{}
 
 	file, err := openFile(pathToTextFile)
 
@@ -55,7 +55,7 @@ func openFile(path string) (*os.File, error) {
 	return fileHandle, nil
 }
 
-func (t *TextReader) ReadLine() (*string, error) {
+func (t *Reader) ReadLine() (*string, error) {
 
 	if !t.Scanner.Scan() {
 		err := t.Scanner.Err()

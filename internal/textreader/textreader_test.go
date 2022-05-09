@@ -25,7 +25,7 @@ func TestTextReader(t *testing.T) {
 	})
 
 	t.Run("reads a line", func(t *testing.T) {
-		reader := textreader.TextReader{}
+		reader := textreader.Reader{}
 
 		lineExpected := "May 6"
 
