@@ -20,6 +20,7 @@ var (
 var specialLines = map[string]string{
 	"Pending":      "skip",
 	"6% Cash Back": "skip",
+	"3% Cash Back": "skip",
 	"Credit":       "skip",
 	"":             "skip",
 }
